@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# test_tg.rb
+# test_telegrambot.rb
 # Copyright (C) 2024 vagrant <vagrant@4db04eefe25e>
 #
 # Distributed under terms of the MIT license.
@@ -8,7 +8,7 @@
 
 require 'telegram/bot'
 
-token = '7330897348:AAFnWv1CeEuniI69JHJ7ESriFhc23p_hcr4'
+token = Rails.application.credentials.dig(:telegram_bot)
 
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|

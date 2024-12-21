@@ -22,9 +22,9 @@ class TelegramBotter
   end
 
   def start_bot(token)
-    Telegram::Bot::Client.run(token, environment: :test) do |bot|
+    Telegram::Bot::Client.run(token) do |bot|
       Rails.application.config.telegram_bot = bot
-      bot.api.get_updates(offset: -1)
+      puts bot.api.get_updates()
 
       bot.listen do |message|
         puts "Received message: #{message}"
@@ -40,19 +40,9 @@ class TelegramBotter
       end
     end
   rescue Telegram::Bot::Exceptions::ResponseError => e
-    Rails.logger.error "Telegram API Error: #{e.message}"
-    Rails.logger.error "Error Code: #{e.error_code}" if e.respond_to?(:error_code)
-    Rails.logger.error "Description: #{e.description}" if e.respond_to?(:description)
-    Rails.logger.error "Parameters: #{e.parameters}" if e.respond_to?(:parameters)
-    begin
-      Rails.application.config.telegram_bot.api.delete_webhook
-    rescue Telegram::Bot::Exceptions::ResponseError => inner_e
-      Rails.logger.error "Inner Telegram API Error: #{inner_e.message}"
-      Rails.logger.error "Error Code: #{inner_e.error_code}" if inner_e.respond_to?(:error_code)
-      Rails.logger.error "Description: #{inner_e.description}" if inner_e.respond_to?(:description)
-      Rails.logger.error "Parameters: #{inner_e.parameters}" if inner_e.respond_to?(:parameters)
-    end
+    Rails.logger.error e
     Rails.application.config.telegram_bot.stop
+    Rails.application.config.telegram_bot.api.delete_webhook
   end
 
   Signal.trap("TERM") do
