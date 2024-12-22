@@ -21,7 +21,7 @@ class OpenAIService
       parameters: {
         model: 'gpt-4o-mini',
         messages: messages,
-        temperature: 1.5,
+        temperature: 1.0,
         max_tokens: 500,
       }
     )
