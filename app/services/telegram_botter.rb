@@ -2,7 +2,7 @@ require 'telegram/bot'
 require_relative 'openai_service'
 
 class TelegramBotter
-  MAX_MESSAGE_LENGTH = 4096
+  MAX_MESSAGE_LENGTH = 2048
 
   def initialize
     @openai_service = OpenAIService.new
