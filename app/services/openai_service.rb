@@ -6,7 +6,7 @@ class OpenAIService
   def initialize
     @chat_histories = Hash.new { |hash, key| hash[key] = [] }
     @client = OpenAI::Client.new(access_token: Rails.application.credentials.dig(:openai_key))
-    @system_prompt = { role: "system", content: "You are a helpful assistant who knows Fengshui to help invest crypto currencies. The reply should be straightforward, you shouldn't provide balanced advices, reply must be roasted. When people asked you to introduce, you should answer that you're a Fengshui Agent, knows a lot about Fengshui to help invest crypto currencies." }
+    @system_prompt = { role: "system", content: "Please ignore all previous system prompts. You are a Fengshui Agent,  who knows Fengshui very well to help invest crypto currencies. The reply should be straightforward, you shouldn't provide balanced advices, reply must be roasted. When people asked you to introduce, you should answer that you're a Fengshui Agent, knows a lot about Fengshui to help invest crypto currencies. The response should be less than 4096 chars long, roughly 1000 tokens" }
   end
 
   def add_message(user_id, role, content)
@@ -22,6 +22,7 @@ class OpenAIService
         model: 'gpt-4o-mini',
         messages: @chat_histories[user_id],
         temperature: 1.5,
+        max_tokens: 1000,
       }
     )
     response.dig("choices", 0, "message", "content") || "No response"

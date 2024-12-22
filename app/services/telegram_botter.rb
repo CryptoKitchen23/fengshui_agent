@@ -2,6 +2,8 @@ require 'telegram/bot'
 require_relative 'openai_service'
 
 class TelegramBotter
+  MAX_MESSAGE_LENGTH = 4096
+
   def initialize
     @openai_service = OpenAIService.new
   end
@@ -22,6 +24,7 @@ class TelegramBotter
           puts "You asked a question in the chat id: #{message.chat.id} from user id: #{message.from.id}"
           response = @openai_service.get_response(user_id)
           bot.api.send_message(chat_id: message.chat.id, text: response)
+          send_response(bot, message.chat.id, response)
 
           @openai_service.add_message(user_id, "assistant", response)
         end
@@ -43,5 +46,17 @@ class TelegramBotter
     puts "Shutting down bot..."
     Rails.application.config.telegram_bot.stop
     exit
+  end
+
+  private
+
+  def send_response(bot, chat_id, response)
+    if response.length <= MAX_MESSAGE_LENGTH
+      bot.api.send_message(chat_id: chat_id, text: response)
+    else
+      response.scan(/.{1,#{MAX_MESSAGE_LENGTH}}/m).each do |chunk|
+        bot.api.send_message(chat_id: chat_id, text: chunk)
+      end
+    end
   end
 end
