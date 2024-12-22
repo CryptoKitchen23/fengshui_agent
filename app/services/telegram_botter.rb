@@ -1,41 +1,29 @@
 require 'telegram/bot'
-require "openai"
+require_relative 'openai_service'
 
 class TelegramBotter
-
-  def ask_openai(message)
-    prompt = message.text.gsub('/question', '').strip
-
-    openai_key = Rails.application.credentials.dig(:openai_key)
-    client = OpenAI::Client.new(access_token: openai_key)
-
-    response = client.chat(
-      parameters: {
-        model: 'gpt-4o-mini',
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7,
-        max_tokens: 50,
-      }
-    )
-
-    response
+  def initialize
+    @openai_service = OpenAIService.new
   end
 
   def start_bot(token)
     Telegram::Bot::Client.run(token) do |bot|
       Rails.application.config.telegram_bot = bot
-      puts bot.api.get_updates()
+      bot.api.get_updates(offset: -1)
 
       bot.listen do |message|
         puts "Received message: #{message}"
+        user_id = message.from.id
+
         if message.text.start_with?('/question')
-          puts "You asked a question in the chat with id: #{message.chat.id}"
-          response = ask_openai(message)
-          if response
-            bot.api.send_message(chat_id: message.chat.id, text: response.dig("choices", 0, "message", "content") || "No response")
-          else
-            bot.api.send_message(chat_id: message.chat.id, text: 'Error processing your request')
-          end
+          prompt = message.text.gsub('/question', '').strip
+          @openai_service.add_message(user_id, "user", prompt)
+
+          puts "You asked a question in the chat id: #{message.chat.id} from user id: #{message.from.id}"
+          response = @openai_service.get_response(user_id)
+          bot.api.send_message(chat_id: message.chat.id, text: response)
+
+          @openai_service.add_message(user_id, "assistant", response)
         end
       end
     end
