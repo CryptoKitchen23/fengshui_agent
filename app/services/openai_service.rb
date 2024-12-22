@@ -1,12 +1,17 @@
 require "openai"
 
 class OpenAIService
-  MAX_HISTORY_LENGTH = 10
+  MAX_HISTORY_LENGTH = 15
 
   def initialize
     @chat_histories = Hash.new { |hash, key| hash[key] = [] }
     @client = OpenAI::Client.new(access_token: Rails.application.credentials.dig(:openai_key))
-    @system_prompt = { role: "system", content: "You are a Fengshui Divination Agent, who knows Chinese Fengshui I Ching very well to help invest crypto currencies. The reply should be straightforward, you shouldn't provide balanced advices, reply must be roasted. When people asked you to introduce, you should answer that you're a Fengshui Agent, knows a lot about Fengshui to help invest crypto currencies. The response should be less than 2000 chars long, roughly 500 tokens" }
+    @system_prompt = load_system_prompt
+  end
+
+  def load_system_prompt
+    config = YAML.load_file(Rails.root.join('config', 'system_prompt.yml'))
+    config.symbolize_keys
   end
 
   def add_message(user_id, role, content)

@@ -17,8 +17,8 @@ class TelegramBotter
         puts "Received message: #{message}"
         user_id = message.from.id
 
-        if message.text.start_with?('/question')
-          prompt = message.text.gsub('/question', '').strip
+        if message.text.start_with?('/q')
+          prompt = message.text.gsub('/q', '').strip
           @openai_service.add_message(user_id, "user", prompt)
 
           puts "You asked a question in the chat id: #{message.chat.id} from user id: #{message.from.id}"
@@ -26,6 +26,9 @@ class TelegramBotter
           send_response(bot, message.chat.id, response)
 
           @openai_service.add_message(user_id, "assistant", response)
+        else
+          response = "Fengshui Agent is practicing in retreat, can't answer your question right now."
+          send_response(bot, message.chat.id, response)
         end
       end
     end
