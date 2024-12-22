@@ -23,7 +23,6 @@ class TelegramBotter
 
           puts "You asked a question in the chat id: #{message.chat.id} from user id: #{message.from.id}"
           response = @openai_service.get_response(user_id)
-          bot.api.send_message(chat_id: message.chat.id, text: response)
           send_response(bot, message.chat.id, response)
 
           @openai_service.add_message(user_id, "assistant", response)
