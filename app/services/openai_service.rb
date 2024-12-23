@@ -39,7 +39,7 @@ class OpenAIService
         model: 'gpt-4o-mini',
         messages: messages,
         temperature: 1.0,
-        max_tokens: 500,
+        max_tokens: 250,
       }
     )
     response.dig("choices", 0, "message", "content") || "No response"

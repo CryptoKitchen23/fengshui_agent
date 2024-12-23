@@ -1,24 +1,33 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Fengshui Agent leverages Generative AI and Feng Shui to Discover the Right Memecoins for You
 
-Things you may want to cover:
+What is Feng Shui:
+It’s an ancient divination practice rooted in East Asian philosophy and metaphysics.
+Translated as "wind" (Feng) and "water" (Shui), it emphasizes the harmonious interaction between individuals and their surroundings.
+How does the Feng Shui Agent work?
+Central to Feng Shui are the concepts of Qi (vital life force) and the Five Elements—wood, fire, earth, metal, and water—which together create balance and alignment.
+The philosophy is simple: Success in trading isn’t just about timing or trends — it’s about energy alignment.
+Every trader has a unique energy
+Every memecoin carries its energy
+FengShui Agent uses cutting-edge LLMs to analyze both and find the perfect match for your trading journey.
 
 * Ruby version
-
-* System dependencies
+    3.3.1
 
 * Configuration
+    Please provide the secret key base in the environment variable
+    using `EDITOR="vim" rails credentials:edit`
+    ```
+    # Open AI API Key
+    openai_key:
 
-* Database creation
+    # Telegram API key
+    telegram_bot:
 
-* Database initialization
+    # CoinMarketCap API Key
+    cmc_key:
+    ...
+    ```
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* More services to roll out in the `app/services` folder
