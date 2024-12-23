@@ -12,7 +12,7 @@ class OpenAIService
     coins = get_pump_fun_recommendations()
     if coins.any?
       pump_fun_prompt = load_pump_fun_prompt
-      @system_prompt[:content] += "\n\n#{pump_fun_prompt[:content]} + #{coins}}"
+      @system_prompt[:content] += "\n #{coins}} \n #{pump_fun_prompt[:content]} "
     end
   end
 
