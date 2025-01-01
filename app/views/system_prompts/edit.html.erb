@@ -1,19 +1,14 @@
 <%= form_with url: update_system_prompt_path, method: :patch, local: true do |form| %>
   <h2>System Prompt</h2>
   <div class="field">
-    <%= form.label :role %>
-    <%= form.text_field :role, value: @prompts['system_prompt']['role'], disabled: true %>
-  </div>
-
-  <div class="field">
     <%= form.label :system_prompt_content, "Content" %>
-    <%= form.text_area :system_prompt_content, value: @prompts['system_prompt']['content'], rows: 10 %>
+    <%= form.text_area :system_prompt_content, value: @prompts['system_prompt']['content'], rows: 20, cols: 80 %>
   </div>
 
   <h2>Pump Fun Prompt</h2>
   <div class="field">
     <%= form.label :pump_fun_prompt_content, "Content" %>
-    <%= form.text_area :pump_fun_prompt_content, value: @prompts['pump_fun_prompt']['content'], rows: 10 %>
+    <%= form.text_area :pump_fun_prompt_content, value: @prompts['pump_fun_prompt']['content'], rows: 20, cols: 80 %>
   </div>
 
   <div class="actions">

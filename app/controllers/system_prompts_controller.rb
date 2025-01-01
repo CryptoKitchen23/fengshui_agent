@@ -8,7 +8,7 @@ class SystemPromptsController < ApplicationController
   def update
     @prompts = {
       'system_prompt' => {
-        'role' => params[:role],
+        'role' => 'system',  # Always set the role to "system"
         'content' => params[:system_prompt_content]
       },
       'pump_fun_prompt' => {
