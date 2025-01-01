@@ -1,4 +1,6 @@
 class SystemPromptsController < ApplicationController
+  before_action :authenticate
+
   def edit
     @prompts = load_prompts
   end
@@ -21,6 +23,13 @@ class SystemPromptsController < ApplicationController
   end
 
   private
+
+  def authenticate
+    authenticate_or_request_with_http_basic do |username, password|
+      username == Rails.application.credentials.dig(:admin, :username) &&
+      password == Rails.application.credentials.dig(:admin, :password)
+    end
+  end
 
   def load_prompts
     YAML.load_file(Rails.root.join('config', 'prompts', 'prompts.yml'))
