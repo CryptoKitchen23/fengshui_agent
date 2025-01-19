@@ -69,3 +69,5 @@ end
 gem "telegram-bot-ruby", "~> 2.0"
 gem "ruby-openai", "~> 7.0"
 gem "sidekiq", "~> 7.2"
+
+gem "x", "~> 0.14.1"
