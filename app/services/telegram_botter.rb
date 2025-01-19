@@ -6,10 +6,11 @@ class TelegramBotter
 
   def initialize
     @openai_service = OpenAIService.new
+    @telegram_bot_token = Rails.application.credentials.dig(:telegram_bot)
   end
 
-  def start_bot(token)
-    Telegram::Bot::Client.run(token) do |bot|
+  def start_bot()
+    Telegram::Bot::Client.run(@telegram_bot_token) do |bot|
       Rails.application.config.telegram_bot = bot
       bot.api.get_updates(offset: -1)
 

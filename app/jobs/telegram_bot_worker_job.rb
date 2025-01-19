@@ -1,10 +1,9 @@
 class TelegramBotWorkerJob < ApplicationJob
   queue_as :default
 
-  def perform(token)
-    puts "Starting bot..."
-    Rails.logger.info "Starting bot..."
+  def perform()
+    Rails.logger.info "Starting Telegram Bot..."
     telegram_bot = TelegramBotter.new
-    telegram_bot.start_bot(token)
+    telegram_bot.start_bot
   end
 end
