@@ -1,5 +1,5 @@
-# filepath: /Users/fzhang3/Projects/ruby-box/fengshui_agent/app/controllers/system_prompts_controller.rb
-class SystemPromptsController < ApplicationController
+# filepath: /Users/fzhang3/Projects/ruby-box/fengshui_agent/app/controllers/pump_fun_prompts_controller.rb
+class PumpFunPromptsController < ApplicationController
   before_action :set_prompts, only: [:edit, :update]
   before_action :set_selected_prompt, only: [:edit, :update]
 
@@ -12,7 +12,7 @@ class SystemPromptsController < ApplicationController
     new_prompt.version = @selected_prompt.version + 1
 
     if new_prompt.save
-      redirect_to edit_system_prompt_path, notice: 'System prompt was successfully updated.'
+      redirect_to edit_pump_fun_prompt_path, notice: 'Pump fun prompt was successfully updated.'
     else
       render :edit
     end
@@ -21,7 +21,7 @@ class SystemPromptsController < ApplicationController
   private
 
   def set_prompts
-    @prompts = Prompt.where(role: 'system').order(version: :desc)
+    @prompts = Prompt.where(role: 'pump_fun').order(version: :desc)
   end
 
   def set_selected_prompt

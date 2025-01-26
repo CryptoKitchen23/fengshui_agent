@@ -16,9 +16,8 @@ class OpenAIService
   end
 
   def load_prompts
-    config = YAML.load_file(Rails.root.join('config', 'prompts', 'prompts.yml'))
-    @system_prompt = config['system_prompt'].symbolize_keys
-    @pump_fun_prompt = config['pump_fun_prompt'].symbolize_keys
+    @system_prompt = Prompt.where(role: 'system').order(version: :desc).first
+    @pump_fun_prompt = Prompt.where(role: 'pump_fun').order(version: :desc).first
   end
 
   def reload_prompts

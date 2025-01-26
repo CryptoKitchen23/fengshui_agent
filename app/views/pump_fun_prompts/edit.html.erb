@@ -1,17 +1,17 @@
-<!-- filepath: /Users/fzhang3/Projects/ruby-box/fengshui_agent/app/views/system_prompts/edit.html.erb -->
+<!-- filepath: /Users/fzhang3/Projects/ruby-box/fengshui_agent/app/views/pump_fun_prompts/edit.html.erb -->
 <% if @prompts.empty? %>
   <p>No prompts found. Please create some prompts first.</p>
 <% else %>
   <div>
-    <h2>System Prompt</h2>
-    <%= form_with url: edit_system_prompt_path, method: :get, local: true do |form| %>
+    <h2>Pump Fun Prompt</h2>
+    <%= form_with url: edit_pump_fun_prompt_path, method: :get, local: true do |form| %>
       <div class="field">
         <%= form.label :id, "Select Version" %>
         <%= select_tag :id, options_from_collection_for_select(@prompts, :id, :version, @selected_prompt&.id), onchange: "this.form.submit();" %>
       </div>
     <% end %>
 
-    <%= form_with model: @selected_prompt, url: update_system_prompt_path(id: @selected_prompt.id), method: :patch, local: true do |form| %>
+    <%= form_with model: @selected_prompt, url: update_pump_fun_prompt_path(id: @selected_prompt.id), method: :patch, local: true do |form| %>
       <div class="field">
         <%= form.label :content, "Content" %>
         <%= form.text_area :content, rows: 20, cols: 80 %>
