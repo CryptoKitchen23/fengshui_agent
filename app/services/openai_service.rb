@@ -6,7 +6,6 @@ class OpenAIService
   COIN_FETCH_INTERVAL = 24 * 60 * 60 # 1 day in seconds
 
   def initialize
-    @chat_histories = Hash.new { |hash, key| hash[key] = [] }
     @client = OpenAI::Client.new(access_token: Rails.application.credentials.dig(:openai_key))
     @last_coin_fetch_time = Time.now - COIN_FETCH_INTERVAL
     @coins = []
@@ -16,8 +15,12 @@ class OpenAIService
   end
 
   def load_prompts
-    @system_prompt = Prompt.where(role: 'system').order(version: :desc).first
-    @pump_fun_prompt = Prompt.where(role: 'pump_fun').order(version: :desc).first
+    @system_prompt = {
+      role: 'system', content: Prompt.where(role: 'system').order(version: :desc).first.content
+    }
+    @pump_fun_prompt = {
+      role: 'pump_fun', content: Prompt.where(role: 'pump_fun').order(version: :desc).first.content
+    }
   end
 
   def reload_prompts
@@ -35,13 +38,19 @@ class OpenAIService
   end
 
   def add_message(user_id, role, content)
-    @chat_histories[user_id] << { role: role, content: content }
-    @chat_histories[user_id].shift if @chat_histories[user_id].length > MAX_HISTORY_LENGTH
+    Message.create!(
+      user_id: user_id,
+      role: role,
+      content: content,
+      msg_type: 'telegram'
+    )
   end
 
   def get_response(user_id)
     reload_prompts
-    messages = [@system_prompt] + @chat_histories[user_id]
+    messages = [@system_prompt] + Message.where(user_id: user_id).order(created_at: :asc).last(MAX_HISTORY_LENGTH).map do |msg|
+      { role: msg.role, content: msg.content }
+    end
     puts "The chat history: #{messages}"
     response = @client.chat(
       parameters: {
